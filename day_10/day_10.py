@@ -19,8 +19,36 @@ def solve_part_1(data):
     
     print(f'1 Jolt: {jolt_difference_of_1} | 3 Jolt: {jolt_difference_of_3} | Product: {jolt_difference_of_1 * jolt_difference_of_3}')
 
+def count_options(index, nodes, lookup):
+    result = 0
+
+    indexes_to_visit = []
+    if index not in lookup:
+        for i in range(index + 1, index + 4):
+            if i < len(nodes):
+                if nodes[i] - nodes[index] in (1, 2, 3):
+                    indexes_to_visit.append(i)
+            else:
+                break
+
+        if indexes_to_visit:
+            for index_to_visit in indexes_to_visit:
+                result += count_options(index_to_visit, nodes, lookup)
+                lookup[index] = result
+        else:
+            return 1
+    return lookup[index]
+
 def solve_part_2(data):
-    pass
+    adapters = []
+    for x in data.copy():
+        adapters.append(int(x))
+    adapters = sorted(adapters)
+    adapters.append(adapters[-1] + 3)
+    adapters.insert(0, 0)
+    lookup = {}
+
+    print(count_options(0, adapters, lookup))
 
     
 if __name__ == "__main__":
